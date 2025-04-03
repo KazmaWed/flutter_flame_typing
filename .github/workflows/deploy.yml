@@ -1,0 +1,46 @@
+name: Build and Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.1'
+
+      - name: Download protected assets
+        run: |
+          echo "Downloading assets from URL: $ASSET_ZIP_URL"
+          curl -L "$ASSET_ZIP_URL" -o assets.zip
+          unzip assets.zip
+        env:
+          ASSET_ZIP_URL: ${{ secrets.ASSET_ZIP_URL }}
+
+      - name: Generate firebase_web_options.dart from template
+        run: |
+          sed -e "s|FIREBASE_API_KEY|${{ secrets.FIREBASE_API_KEY }}|g" \
+              -e "s|FIREBASE_APP_ID|${{ secrets.FIREBASE_APP_ID }}|g" \
+              -e "s|FIREBASE_MESSAGING_SENDER_ID|${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}|g" \
+              -e "s|FIREBASE_PROJECT_ID|${{ secrets.FIREBASE_PROJECT_ID }}|g" \
+              -e "s|FIREBASE_AUTH_DOMAIN|${{ secrets.FIREBASE_AUTH_DOMAIN }}|g" \
+              -e "s|FIREBASE_STORAGE_BUCKET|${{ secrets.FIREBASE_STORAGE_BUCKET }}|g" \
+              -e "s|FIREBASE_MEASUREMENT_ID|${{ secrets.FIREBASE_MEASUREMENT_ID }}|g" \
+              lib/firebase_options_template.dart > lib/firebase_options.dart
+
+      - run: flutter pub get
+
+      - run: flutter build web --release
+
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
