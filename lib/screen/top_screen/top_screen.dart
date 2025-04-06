@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../component/background_view.dart';
-import '../../component/square_button.dart';
-import '../../game_component/game_audio.dart';
+import '../../model/game_audio.dart';
 import '../../model/game_setting.dart';
 import '../../model/game_setting_manager.dart';
+import '../../screen/top_screen/top_screen_components.dart';
 import '../keyboard_setting_screen.dart';
-import 'top_screen_components.dart';
 
 class TopScreen extends StatefulWidget {
   const TopScreen({super.key});
@@ -18,8 +17,7 @@ class TopScreen extends StatefulWidget {
 }
 
 class _TopScreenState extends State<TopScreen> {
-  final audio = GetIt.instance.get<GameAudio>()..load();
-
+  final audio = GetIt.instance.get<GameAudioPlayer>();
   final settingManager = GetIt.instance.get<GameSettingManager>();
   GameSetting get setting => settingManager.gameSetting;
 
@@ -33,9 +31,7 @@ class _TopScreenState extends State<TopScreen> {
     );
   }
 
-  void _handlePageChanged(int page) {}
-
-  final backgroundView = Center(
+  final _backgroundView = Center(
     child: ParallaxBackgroundView(
       gameSize: Vector2(800, 450),
     ),
@@ -60,7 +56,7 @@ class _TopScreenState extends State<TopScreen> {
 
     final bottomAppBar = GameBottomAppBar(
       onTapKeyboardSetting: () {
-        if (setting.se ?? false) audio.shoot.start();
+        audio.play(GameAudio.shoot, setting.se);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => KeyboardSettingScreen(
@@ -72,23 +68,21 @@ class _TopScreenState extends State<TopScreen> {
       onTapSe: () {
         setState(() {
           settingManager.toggleSe();
-          if (setting.se ?? false) audio.shoot.start();
+          audio.play(GameAudio.shoot, setting.se);
         });
       },
     );
 
     final views = [
-      SoundModePickView(onTap: (se) {
-        setState(() {
-          settingManager.setSe(se);
+      SoundModePickView(
+        onTap: (se) async {
+          setState(() => settingManager.setSe(se));
+          await audio.dryRun();
+          audio.play(GameAudio.shoot, setting.se);
           _animateToPage(1);
-        });
-        if (setting.se ?? false) audio.shoot.start();
-      }),
-      LevelPickView(
-        se: setting.se ?? false,
-        bgm: setting.se ?? false,
-      )
+        },
+      ),
+      const LevelPickView()
     ];
 
     return Scaffold(
@@ -96,7 +90,7 @@ class _TopScreenState extends State<TopScreen> {
       bottomNavigationBar: bottomAppBar,
       body: Stack(
         children: [
-          backgroundView,
+          _backgroundView,
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -108,7 +102,6 @@ class _TopScreenState extends State<TopScreen> {
                   child: PageView.builder(
                     itemBuilder: (context, index) => views[index],
                     controller: _pageController,
-                    onPageChanged: _handlePageChanged,
                   ),
                 ),
               ],

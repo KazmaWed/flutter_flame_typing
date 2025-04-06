@@ -4,11 +4,11 @@ import 'package:get_it/get_it.dart';
 import '../../component/section_container.dart';
 import '../../component/square_button.dart';
 import '../../component/square_segmented_button.dart';
-import '../../game_component/game_audio.dart';
 import '../../level/level_map.dart';
 import '../../level/position_practice_level.dart';
 import '../../level/word_typing_level.dart';
 import '../../main.dart';
+import '../../model/game_audio.dart';
 import '../../model/game_color.dart';
 import '../../model/game_setting.dart';
 import '../../model/game_setting_manager.dart';
@@ -114,20 +114,14 @@ class SoundModePickView extends StatelessWidget {
 }
 
 class LevelPickView extends StatefulWidget {
-  const LevelPickView({
-    super.key,
-    this.se = false,
-    this.bgm = false,
-  });
-  final bool se;
-  final bool bgm;
+  const LevelPickView({super.key});
 
   @override
   State<LevelPickView> createState() => _LevelPickViewState();
 }
 
 class _LevelPickViewState extends State<LevelPickView> {
-  final audio = GetIt.instance.get<GameAudio>();
+  final audio = GetIt.instance.get<GameAudioPlayer>();
   final settingManager = GetIt.I.get<GameSettingManager>();
   GameSetting get setting => settingManager.gameSetting;
 
@@ -163,7 +157,7 @@ class _LevelPickViewState extends State<LevelPickView> {
                               RectangleButton(
                                 backgroundAlpha: 0,
                                 onTap: () {
-                                  if (widget.se) audio.shoot.start();
+                                  audio.play(GameAudio.shoot, setting.se);
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => TypingGameScreen(
@@ -171,8 +165,8 @@ class _LevelPickViewState extends State<LevelPickView> {
                                         phisicalLayout: setting.phisicalLayout,
                                         virtualLayout:
                                             setting.virtualMode ? setting.logicalLayout : null,
-                                        se: widget.se,
-                                        bgm: widget.bgm,
+                                        se: setting.se ?? false,
+                                        bgm: setting.se ?? false,
                                       ),
                                     ),
                                   );
@@ -206,7 +200,7 @@ class _LevelPickViewState extends State<LevelPickView> {
                 labels: levelsMap.keys.toList(),
                 currentIndex: setting.gameMode,
                 onSelect: (i) {
-                  if (setting.se ?? false) audio.shoot.start();
+                  audio.play(GameAudio.shoot, setting.se);
                   setState(() {
                     settingManager.setGameMode(GameMode.fromId(i));
                   });

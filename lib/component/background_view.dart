@@ -4,7 +4,9 @@ import 'package:flame/components.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
+import 'package:get_it/get_it.dart';
 
+import '../model/game_audio.dart';
 import '../model/game_color.dart';
 
 class ParallaxBackgroundView extends StatelessWidget {
@@ -52,11 +54,13 @@ class ParallaxBackgroundGame extends FlameGame {
 }
 
 class ParallaxBackgroung extends ParallaxComponent<ParallaxBackgroundGame> {
+  final GameAudioPlayer audio = GetIt.I.get<GameAudioPlayer>();
   ParallaxBackgroung() : super();
   Vector2 lastPosition = Vector2.zero();
 
   @override
   FutureOr<void> onLoad() async {
+    // 背景パララックス初期化
     anchor = Anchor.center;
     parallax = await game.loadParallax(
       [
@@ -70,6 +74,8 @@ class ParallaxBackgroung extends ParallaxComponent<ParallaxBackgroundGame> {
       velocityMultiplierDelta: Vector2(1.4, 1.0),
       filterQuality: FilterQuality.none,
     );
+    // オーディオロード
+    await audio.load();
     return super.onLoad();
   }
 

@@ -5,12 +5,12 @@ import '../component/keyboard_layout_preview.dart';
 import '../component/keyboard_selector.dart';
 import '../component/section_container.dart';
 import '../component/square_button.dart';
-import '../game_component/game_audio.dart';
+import '../model/game_audio.dart';
 import '../model/game_color.dart';
 import '../model/game_setting.dart';
 import '../model/game_setting_manager.dart';
 import '../model/kayboard_layout.dart';
-import 'key_test_screen.dart';
+import '../screen/key_test_screen.dart';
 
 class KeyboardSettingScreen extends StatefulWidget {
   const KeyboardSettingScreen({
@@ -25,7 +25,7 @@ class KeyboardSettingScreen extends StatefulWidget {
 }
 
 class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
-  final audio = GetIt.instance.get<GameAudio>();
+  final audio = GetIt.instance.get<GameAudioPlayer>();
   final settingManager = GetIt.instance.get<GameSettingManager>();
   GameSetting get setting => settingManager.gameSetting;
 
@@ -51,7 +51,7 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
             RectangleButton(
               padding: EdgeInsets.zero,
               onTap: () {
-                if (setting.se ?? false) audio.shoot.start();
+                audio.play(GameAudio.shoot, setting.se);
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) =>
@@ -64,7 +64,7 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
             RectangleButton(
               padding: EdgeInsets.zero,
               onTap: () {
-                if (setting.se ?? false) audio.shoot.start();
+                audio.play(GameAudio.shoot, setting.se);
                 Navigator.of(context).pop();
               },
               text: '決定',
@@ -98,7 +98,7 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                               settingManager.setLogicalLayout(null);
                             }
 
-                            if (setting.se ?? false) audio.reload.start();
+                            audio.play(GameAudio.reload, setting.se);
                             setState(() {
                               settingManager.setPhisicalLayout(layout);
                               // phisicalLayout = layout;
@@ -132,7 +132,7 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                           const Spacer(),
                           RectangleButton(
                             onTap: () {
-                              if (setting.se ?? false) audio.reload.start();
+                              audio.play(GameAudio.reload, setting.se);
                               setState(() => settingManager.setLogicalLayout(null));
                               widget.onSettingChanged();
                             },
@@ -144,11 +144,11 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                               onTap: () {
                                 // 物理キーボードと同じ場合は押せない
                                 if (setting.phisicalLayout == layout) {
-                                  if (setting.se ?? false) audio.wrong.start();
+                                  audio.play(GameAudio.wrong, setting.se);
                                   return;
                                 }
 
-                                if (setting.se ?? false) audio.reload.start();
+                                audio.play(GameAudio.reload, setting.se);
                                 setState(() {
                                   settingManager.setLogicalLayout(layout);
                                 });

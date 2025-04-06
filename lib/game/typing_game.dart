@@ -6,18 +6,18 @@ import 'package:get_it/get_it.dart';
 
 import '../game_component/bullet.dart';
 import '../game_component/dying_fx.dart';
-import '../game_component/game_audio.dart';
 import '../game_component/life_bar.dart';
 import '../game_component/parallax_backgroung.dart';
 import '../game_component/player.dart';
 import '../game_component/target.dart';
+import '../model/game_audio.dart';
 import '../model/game_phase.dart';
 import '../model/game_color.dart';
 import '../model/game_setting_manager.dart';
 import '../model/level.dart';
 import '../game/typing_game_horizon.dart';
 import '../game/typing_game_state.dart';
-import 'typing_game_ui_overlay.dart';
+import '../game/typing_game_ui_overlay.dart';
 
 class TypingGame extends FlameGame
     with KeyboardEvents, TapCallbacks, HasCollisionDetection, TypingGameState {
@@ -38,7 +38,7 @@ class TypingGame extends FlameGame
   @override
   Color backgroundColor() => GameColor.gameBackgroung;
 
-  final audio = GetIt.instance.get<GameAudio>();
+  final audio = GetIt.instance.get<GameAudioPlayer>();
   final settingManager = GetIt.instance.get<GameSettingManager>();
   late var setting = settingManager.gameSetting;
 
@@ -112,13 +112,13 @@ class TypingGame extends FlameGame
   }
 
   void _onCollect() {
-    if (setting.se ?? false) audio.shoot.start();
+    audio.play(GameAudio.shoot, setting.se);
     typed += 1;
     _shoot();
   }
 
   void _onWrond() {
-    if (setting.se ?? false) audio.wrong.start();
+    audio.play(GameAudio.wrong, setting.se);
   }
 
   void proccessElement() async {
@@ -153,7 +153,7 @@ class TypingGame extends FlameGame
 
   void _bulletHitTarget(Bullet bullet) {
     target.fx();
-    if (setting.se ?? false) audio.hit.start();
+    audio.play(GameAudio.hit, setting.se);
     if (phase != GamePhase.playing) return;
     if (bullet.id == target.id) {
       score += 1;
@@ -165,7 +165,7 @@ class TypingGame extends FlameGame
       target.init(newId: count);
       Future.delayed(const Duration(milliseconds: 200)).then(
         (_) {
-          if (setting.se ?? false) audio.reload.start();
+          audio.play(GameAudio.reload, setting.se);
         },
       );
       if (level.events.length > count) {
@@ -179,7 +179,7 @@ class TypingGame extends FlameGame
 
   void _targetHitPlayer() async {
     phase = GamePhase.gameover;
-    if (setting.se ?? false) audio.dying.start(volume: 0.5);
+    audio.play(GameAudio.dying, setting.se);
     for (var i = 0; i < 6; i++) {
       await Future.delayed(const Duration(milliseconds: 150));
       world.add(DyingFx());
