@@ -12,6 +12,13 @@ extension ListExtension on List {
     }
     return null;
   }
+
+  T? firstWhereOrNull<T>(bool Function(T) test) {
+    for (var i = 0; i < length; i++) {
+      if (test(this[i])) return this[i];
+    }
+    return null;
+  }
 }
 
 extension StringIterableExtension on Iterable<String> {

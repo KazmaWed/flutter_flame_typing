@@ -14,32 +14,6 @@ abstract class GameScore with _$GameScore {
     required Map<Obstacle, ObstacleScore> obstacleScore,
   }) = _GameScore;
 
-  // ---------- ゲッター類 ----------
-
-  Event? get currentEvent => level.events.firstWhere((e) => e.end == false);
-  int? get currentEventIndex {
-    for (var i = 0; i < level.events.length; i++) {
-      if (level.events[i].end == false) {
-        return i;
-      }
-    }
-    return null;
-  }
-
-  Obstacle? get currentObstacle =>
-      currentObstacleIndex == null ? null : level.obstacles[currentObstacleIndex!];
-  int? get currentObstacleIndex {
-    for (var i = 0; i < level.obstacles.length; i++) {
-      if (level.obstacles[i].end == false) {
-        return i;
-      }
-    }
-    return null;
-  }
-
-  int get totalCorrectType => obstacleScore.values.fold(0, (sum, e) => sum + e.correct); // 正解数
-  int get totalIncorrectType => obstacleScore.values.fold(0, (sum, e) => sum + e.incorrect); // 正解数
-
   // 生成メソッド
   static GameScore createGameScore(Level level) {
     return GameScore(
@@ -51,9 +25,24 @@ abstract class GameScore with _$GameScore {
     );
   }
 
-  // 全ての単語終了
+  // ---------- ゲッター類 ----------
+
+  Event get currentEvent =>
+      level.events.firstWhereOrNull((e) => e.end == false) ?? level.events.last;
+  int get currentEventIndex => level.events.indexOf(currentEvent);
+
+  Obstacle get currentObstacle =>
+      level.obstacles.firstWhereOrNull((e) => e.end == false) ?? level.obstacles.last;
+  int get currentObstacleIndex => level.obstacles.indexOf(currentObstacle);
+
+  ObstacleScore? get currentObstacleScore => obstacleScore[currentObstacle];
+
+  int get totalCorrectType => obstacleScore.values.fold(0, (sum, e) => sum + e.correct); // 正解数
+  int get totalIncorrectType => obstacleScore.values.fold(0, (sum, e) => sum + e.incorrect); // 正解数
+
+  // 全ての単語が終了したか
   bool get clear => level.events.every((e) => e.end); // 全ての単語をタイプしたか
-  // 失敗なしでクリア
+  // 失敗なしでクリアしたか
   bool get perfect => clear && totalIncorrectType == 0; // ノーミスでクリアしたか
 
   // 直近の連続正解数

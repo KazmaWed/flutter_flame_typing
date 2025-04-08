@@ -6,8 +6,8 @@ enum GameAudio {
   wrong('wrong.mp3'),
   reload('reload.mp3'),
   hit('hit.mp3'),
-  dying('dying.mp3', volume: 0.2),
-  bgm('Neon_Drive.mp3', volume: 0.15);
+  dying('dying.mp3', volume: 0.25),
+  bgm('Neon_Drive.mp3', volume: 0.1);
 
   // ファイル名
   final String path;

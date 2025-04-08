@@ -39,12 +39,14 @@ class TypingGame extends FlameGame
   @override
   Color backgroundColor() => GameColor.gameBackgroung;
 
-  int get currentEventIndex => score.currentEventIndex ?? 0;
-  int get currentObstacleIndex => score.currentObstacleIndex ?? 0;
-  Obstacle? get currentObstacle => score.currentObstacle;
+  // ゲームスコアの状態
   Event get currentEvent => level.events[currentEventIndex];
-  ObstacleScore? get currentWordScore => score.obstacleScore[currentObstacle];
+  int get currentEventIndex => score.currentEventIndex;
+  Obstacle get currentObstacle => score.currentObstacle;
+  int get currentObstacleIndex => score.currentObstacleIndex;
+  ObstacleScore? get currentObstacleScore => score.obstacleScore[currentObstacle];
 
+  // その他オーディオやコンポーネントなど
   final audio = GetIt.instance.get<GameAudioPlayer>();
   final settingManager = GetIt.instance.get<GameSettingManager>();
   late var setting = settingManager.gameSetting;
@@ -89,8 +91,7 @@ class TypingGame extends FlameGame
       final charactor = setting.virtualMode
           ? setting.phisicalLayout.keySwap(event.character!, to: setting.logicalLayout!)
           : event.character;
-      if (charactor ==
-          score.currentObstacle?.word[score.obstacleScore[score.currentObstacle!]?.correct ?? 0]) {
+      if (charactor == currentObstacle.word[score.currentObstacleScore?.correct ?? 0]) {
         // 他のキーが押され続けている場合を除外
         _onCollect();
         return KeyEventResult.handled; // イベントを処理した場合
@@ -154,8 +155,8 @@ class TypingGame extends FlameGame
 
   void _shoot() {
     final bullet = Bullet(
-      id: score.currentEventIndex ?? 0,
-      critical: score.obstacleScore[score.currentObstacle]?.clear ?? false,
+      id: currentEventIndex,
+      critical: currentObstacleScore?.clear ?? false,
       onHit: (bullet) => _bulletHitTarget(bullet),
     );
     world.add(bullet);
@@ -170,7 +171,7 @@ class TypingGame extends FlameGame
     }
 
     if (bullet.critical && bullet.id == target.id) {
-      score.endEvent(score.currentEvent!);
+      score.endEvent(score.currentEvent);
       target.init(newId: currentEventIndex + 1);
       Future.delayed(const Duration(milliseconds: 200)).then(
         (_) {
