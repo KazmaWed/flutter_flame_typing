@@ -47,15 +47,13 @@ abstract class GameScore with _$GameScore {
 
   // 直近の連続正解数
   int get combo {
-    final Obstacle? lastObstacle =
-        level.obstacles.lastWhereOrNull((e) => obstacleScore[e]?.notStarted == false);
-    if (lastObstacle == null) return 0;
+    if (currentObstacleIndex == 0) return 0;
+    final lastObstacleIndex = currentObstacleIndex - 1;
 
-    final lastObstacleIndex = obstacleScore.keys.toList().indexOf(lastObstacle);
     int count = 0;
     for (var i = lastObstacleIndex; i >= 0; i--) {
-      final obstacle = level.obstacles[i];
-      if (obstacleScore[obstacle]?.perfect == true) {
+      final obstacle = obstacleScore.keys.toList()[i];
+      if (obstacleScore[obstacle]!.perfect == true) {
         count++;
       } else {
         break;
@@ -80,11 +78,13 @@ abstract class GameScore with _$GameScore {
 
   // 単語で正解をタイピング
   GameScore correctType({Obstacle? obstacle}) {
+    final score = obstacleScore[obstacle ?? currentObstacle];
+    if (score?.clear == true) return this;
+
     return copyWith(
       obstacleScore: obstacleScore.map((key, value) {
         if (key == (obstacle ?? currentObstacle)) {
-          return MapEntry(
-              key, ObstacleScore(key.word, correct: value.correct + 1, incorrect: value.incorrect));
+          return MapEntry(key, score!.copyWith(correct: value.correct + 1));
         }
         return MapEntry(key, value);
       }),
@@ -98,8 +98,8 @@ abstract class GameScore with _$GameScore {
 
     return copyWith(
       obstacleScore: obstacleScore.map((key, value) {
-        if (key == obstacle) {
-          return MapEntry(key, ObstacleScore(key.word, correct: value.incorrect + 1));
+        if (key == (obstacle ?? currentObstacle)) {
+          return MapEntry(key, score!.copyWith(incorrect: value.incorrect + 1));
         }
         return MapEntry(key, value);
       }),
@@ -123,4 +123,16 @@ class ObstacleScore {
   bool get clear => correct == word.length; // 単語をタイプしたか
   bool get noMissYet => incorrect == 0; // ミスをしていないか (クリア前でもtrue)
   bool get perfect => correct == word.length && incorrect == 0; // ノーミスでクリアしたか
+
+  ObstacleScore copyWith({
+    String? word,
+    int? correct,
+    int? incorrect,
+  }) {
+    return ObstacleScore(
+      word ?? this.word,
+      correct: correct ?? this.correct,
+      incorrect: incorrect ?? this.incorrect,
+    );
+  }
 }
