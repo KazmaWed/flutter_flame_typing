@@ -25,6 +25,39 @@ abstract class GameScore with _$GameScore {
     );
   }
 
+  @override
+  String toString() {
+    return 'GameScore(event: $currentEventIndex, correct: $totalCorrectType, incorrect: $totalIncorrectType, combo: $combo, perfect: $perfect)';
+  }
+}
+
+// 単語ごとのスコアを管理するクラス
+class ObstacleScore {
+  ObstacleScore(this.word, {this.correct = 0, this.incorrect = 0});
+  final String word;
+  final int correct;
+  final int incorrect;
+
+  bool get notStarted => correct == 0 && incorrect == 0; // まだタイピングしていないか
+  bool get clear => correct == word.length; // 単語をタイプしたか
+  bool get noMissYet => incorrect == 0; // ミスをしていないか (クリア前でもtrue)
+  bool get perfect => correct == word.length && incorrect == 0; // ノーミスでクリアしたか
+
+  ObstacleScore copyWith({
+    String? word,
+    int? correct,
+    int? incorrect,
+  }) {
+    return ObstacleScore(
+      word ?? this.word,
+      correct: correct ?? this.correct,
+      incorrect: incorrect ?? this.incorrect,
+    );
+  }
+}
+
+// GameScoreの拡張メソッド群
+extension GameScoreExtension on GameScore {
   // ---------- ゲッター類 ----------
 
   Event get currentEvent =>
@@ -62,7 +95,7 @@ abstract class GameScore with _$GameScore {
     return count;
   }
 
-  // ---------- 更新メソッド類 ----------
+  // ---------- 複製メソッド類 ----------
 
   // イベントの終了フラグを立てる
   GameScore endEvent(Event? on) {
@@ -103,36 +136,6 @@ abstract class GameScore with _$GameScore {
         }
         return MapEntry(key, value);
       }),
-    );
-  }
-
-  @override
-  String toString() {
-    return 'GameScore(event: $currentEventIndex, correct: $totalCorrectType, incorrect: $totalIncorrectType, combo: $combo, perfect: $perfect)';
-  }
-}
-
-// 単語ごとのスコアを管理するクラス
-class ObstacleScore {
-  ObstacleScore(this.word, {this.correct = 0, this.incorrect = 0});
-  final String word;
-  final int correct;
-  final int incorrect;
-
-  bool get notStarted => correct == 0 && incorrect == 0; // まだタイピングしていないか
-  bool get clear => correct == word.length; // 単語をタイプしたか
-  bool get noMissYet => incorrect == 0; // ミスをしていないか (クリア前でもtrue)
-  bool get perfect => correct == word.length && incorrect == 0; // ノーミスでクリアしたか
-
-  ObstacleScore copyWith({
-    String? word,
-    int? correct,
-    int? incorrect,
-  }) {
-    return ObstacleScore(
-      word ?? this.word,
-      correct: correct ?? this.correct,
-      incorrect: incorrect ?? this.incorrect,
     );
   }
 }

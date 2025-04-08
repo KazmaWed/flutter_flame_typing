@@ -6,6 +6,7 @@ import '../extension/flame_image_extension.dart';
 import '../game/typing_game.dart';
 import '../model/level.dart';
 import '../model/game_phase.dart';
+import '../model/game_score.dart';
 
 import 'target_fx.dart';
 

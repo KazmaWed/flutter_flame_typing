@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../model/game_color.dart';
 import '../model/game_phase.dart';
+import '../model/game_score.dart';
 import '../model/level.dart';
 import 'typing_game.dart';
 import 'typing_game_restart_button.dart';
