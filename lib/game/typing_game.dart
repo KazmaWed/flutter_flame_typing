@@ -13,6 +13,7 @@ import '../game_component/target.dart';
 import '../model/game_audio.dart';
 import '../model/game_phase.dart';
 import '../model/game_color.dart';
+import '../model/game_score.dart';
 import '../model/game_setting_manager.dart';
 import '../model/level.dart';
 import '../game/typing_game_horizon.dart';
@@ -38,6 +39,12 @@ class TypingGame extends FlameGame
   @override
   Color backgroundColor() => GameColor.gameBackgroung;
 
+  int get currentEventIndex => score.currentEventIndex ?? 0;
+  int get currentObstacleIndex => score.currentObstacleIndex ?? 0;
+  Obstacle? get currentObstacle => score.currentObstacle;
+  Event get currentEvent => level.events[currentEventIndex];
+  ObstacleScore? get currentWordScore => score.obstacleScore[currentObstacle];
+
   final audio = GetIt.instance.get<GameAudioPlayer>();
   final settingManager = GetIt.instance.get<GameSettingManager>();
   late var setting = settingManager.gameSetting;
@@ -46,7 +53,7 @@ class TypingGame extends FlameGame
   late final parallax = ParallaxBackgroung();
   late final horizon = Horizon();
   late final player = Player();
-  late final target = Target(id: count, onHitPlayer: () => _targetHitPlayer());
+  late final target = Target(id: currentObstacleIndex, onHitPlayer: () => _targetHitPlayer());
   late final textOverlay = TextOverlay();
   late LifeBar lifeBar;
 
@@ -58,13 +65,14 @@ class TypingGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
+    score = GameScore.createGameScore(level);
     world.add(parallax);
     world.add(horizon);
     world.add(player);
     world.add(target);
     world.add(textOverlay);
 
-    gameStart();
+    _gameStart();
     if (bgm) audio.bgm();
   }
 
@@ -74,14 +82,15 @@ class TypingGame extends FlameGame
     Set<LogicalKeyboardKey> keysPressed,
   ) {
     if (phase != GamePhase.playing) return KeyEventResult.ignored;
-    if (level.events[count] is! Obstacle) return KeyEventResult.ignored;
+    if (currentEvent is! Obstacle) return KeyEventResult.ignored;
 
     // `KeyDownEvent`のみ処理
     if (event is KeyDownEvent && event.character != null) {
       final charactor = setting.virtualMode
           ? setting.phisicalLayout.keySwap(event.character!, to: setting.logicalLayout!)
           : event.character;
-      if (charactor == word?[typed]) {
+      if (charactor ==
+          score.currentObstacle?.word[score.obstacleScore[score.currentObstacle!]?.correct ?? 0]) {
         // 他のキーが押され続けている場合を除外
         _onCollect();
         return KeyEventResult.handled; // イベントを処理した場合
@@ -97,12 +106,12 @@ class TypingGame extends FlameGame
   void update(double dt) {
     super.update(dt);
     if (phase != GamePhase.playing) return;
-    if (level.events[count] is Obstacle) {
+    if (currentEvent is Obstacle) {
       distance += dt;
     }
   }
 
-  void gameStart() {
+  void _gameStart() {
     phase = GamePhase.starting;
     Future.delayed(
       const Duration(milliseconds: 1500),
@@ -113,29 +122,30 @@ class TypingGame extends FlameGame
 
   void _onCollect() {
     audio.play(GameAudio.shoot, setting.se);
-    typed += 1;
+    score = score.correctType();
     _shoot();
   }
 
   void _onWrond() {
     audio.play(GameAudio.wrong, setting.se);
+    score = score.incorrectType();
   }
 
   void proccessElement() async {
     phase = GamePhase.playing;
-    final e = level.events[count];
+    final e = currentEvent;
     if (e is Message) {
       word = e.value;
       await Future.delayed(
         const Duration(milliseconds: 1500),
       ).then(
         (_) {
-          count += 1;
+          score.endEvent(e);
           proccessElement();
         },
       );
     } else if (e is Obstacle) {
-      target.init(newId: count);
+      target.init(newId: currentEventIndex);
       word = e.word;
       lifeBar = LifeBar(max: e.word.length.toDouble());
       world.add(lifeBar);
@@ -144,8 +154,8 @@ class TypingGame extends FlameGame
 
   void _shoot() {
     final bullet = Bullet(
-      id: int.parse(count.toString()),
-      critical: typed == word?.length,
+      id: score.currentEventIndex ?? 0,
+      critical: score.obstacleScore[score.currentObstacle]?.clear ?? false,
       onHit: (bullet) => _bulletHitTarget(bullet),
     );
     world.add(bullet);
@@ -156,19 +166,18 @@ class TypingGame extends FlameGame
     audio.play(GameAudio.hit, setting.se);
     if (phase != GamePhase.playing) return;
     if (bullet.id == target.id) {
-      score += 1;
       lifeBar.damage();
     }
+
     if (bullet.critical && bullet.id == target.id) {
-      count += 1;
-      typed = 0;
-      target.init(newId: count);
+      score.endEvent(score.currentEvent!);
+      target.init(newId: currentEventIndex + 1);
       Future.delayed(const Duration(milliseconds: 200)).then(
         (_) {
           audio.play(GameAudio.reload, setting.se);
         },
       );
-      if (level.events.length > count) {
+      if (!score.clear) {
         proccessElement();
       } else {
         phase = GamePhase.clear;

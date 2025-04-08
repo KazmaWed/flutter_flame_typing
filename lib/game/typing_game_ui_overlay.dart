@@ -113,7 +113,7 @@ class TextOverlay extends PositionComponent with HasGameReference<TypingGame> {
   void update(dt) {
     super.update(dt);
     distanceText.text = game.distance.toStringAsFixed(1);
-    scoreText.text = 'SCORE : ${game.score}';
+    scoreText.text = 'SCORE : ${game.score.totalCorrectType}';
     if (game.phase == GamePhase.starting) {
       messageText.text = game.level.title;
       messageOutlineText.text = game.level.title;
@@ -133,7 +133,7 @@ class TextOverlay extends PositionComponent with HasGameReference<TypingGame> {
       typedText.text = '';
     } else {
       final evelts = game.level.events;
-      if (evelts.length <= game.count) {
+      if (evelts.length <= game.currentEventIndex) {
         messageText.text = 'LEVEL CLEAR!';
         messageOutlineText.text = 'LEVEL CREAR!';
         wordText.text = '';
@@ -141,7 +141,7 @@ class TextOverlay extends PositionComponent with HasGameReference<TypingGame> {
         typedText.text = '';
         return;
       }
-      final event = game.level.events[game.count];
+      final event = game.level.events[game.currentEventIndex];
       if (event is Message) {
         messageText.text = event.value;
         messageOutlineText.text = event.value;
@@ -153,7 +153,8 @@ class TextOverlay extends PositionComponent with HasGameReference<TypingGame> {
         messageOutlineText.text = '';
         wordText.text = game.word!;
         wordOutlineText.text = game.word!;
-        final typed = game.word!.length <= game.typed ? game.word!.length : game.typed;
+        final typed = game.currentWordScore?.correct ?? 0;
+
         typedText.text = game.word?.substring(0, typed) ?? '';
         typedText.position.x = wordText.position.x - wordText.size.x / 2;
       }

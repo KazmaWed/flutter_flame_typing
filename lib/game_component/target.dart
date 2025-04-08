@@ -58,7 +58,7 @@ class Target extends SpriteAnimationComponent with HasGameReference<TypingGame> 
     super.update(dt);
 
     if (game.phase != GamePhase.playing) return;
-    if (game.level.events[game.count] is Message) return;
+    if (game.score.currentEvent is Message) return;
 
     // プレイヤー到達
     if (x < game.player.position.x) {
@@ -77,7 +77,7 @@ class Target extends SpriteAnimationComponent with HasGameReference<TypingGame> 
     // 座標計算
     x -= speed;
     speed += baseAccel;
-    if (infiniteMode) speed += extraAccel * game.count;
+    if (infiniteMode) speed += extraAccel * game.currentEventIndex;
     speed -= speed * friction;
   }
 
