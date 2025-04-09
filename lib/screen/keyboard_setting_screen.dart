@@ -188,7 +188,7 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
-                                      ?.copyWith(color: GameColor.white.withAlpha(128))),
+                                      ?.copyWith(color: GameColor.white.halfTransparent)),
                             ),
                           ],
                         ),

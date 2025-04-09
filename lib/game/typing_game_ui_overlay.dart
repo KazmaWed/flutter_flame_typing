@@ -106,7 +106,6 @@ class TextOverlay extends PositionComponent with HasGameReference<TypingGame> {
     add(wordText);
     add(distanceText);
     add(scoreText);
-    // add(restartButton);
     add(quitButton);
   }
 
@@ -128,6 +127,15 @@ class TextOverlay extends PositionComponent with HasGameReference<TypingGame> {
       wordOutlineText.text = '';
       scoreText.text = '';
       typedText.text = '';
+      scoreText.removeFromParent();
+    } else if (game.phase == GamePhase.clear) {
+      scoreText.removeFromParent();
+      messageText.removeFromParent();
+      messageOutlineText.removeFromParent();
+      wordText.removeFromParent();
+      wordOutlineText.removeFromParent();
+      typedText.removeFromParent();
+      wordRect.removeFromParent();
     } else if (game.word == null) {
       wordText.text = '';
       wordOutlineText.text = '';

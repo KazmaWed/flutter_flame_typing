@@ -12,3 +12,7 @@ class GameColor {
   static const white = Color(0xFFFFFFFF);
   static const black = Color(0xFF000000);
 }
+
+extension ColorExtension on Color {
+  Color get halfTransparent => withAlpha(128);
+}

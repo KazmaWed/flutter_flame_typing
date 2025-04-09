@@ -95,6 +95,22 @@ extension GameScoreExtension on GameScore {
     return count;
   }
 
+  int get maxCombo {
+    int max = 0;
+    int currentCount = 0;
+
+    for (bool value in obstacleScore.values.map((e) => e.perfect)) {
+      if (value) {
+        currentCount++;
+        max = currentCount > max ? currentCount : max;
+      } else {
+        currentCount = 0;
+      }
+    }
+
+    return max;
+  }
+
   // ---------- 複製メソッド類 ----------
 
   // イベントの終了フラグを立てる

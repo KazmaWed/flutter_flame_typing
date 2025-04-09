@@ -126,12 +126,12 @@ class _LevelPickViewState extends State<LevelPickView> {
   GameSetting get setting => settingManager.gameSetting;
 
   late final Map<String, List<List<Level Function()>>> levelsMap = {
-    'ワード練習': [
+    WordPracticeMode().title: [
       WordPracticeLevel.generators(Language.japanese),
       WordPracticeLevel.generators(Language.english),
       WordPracticeLevel.generators(Language.program),
     ],
-    'ポジション練習': [
+    PositionPracticeMode().title: [
       PositionPracticeLevel.rows(),
       PositionPracticeLevel.sides(),
     ]
@@ -211,7 +211,7 @@ class _LevelPickViewState extends State<LevelPickView> {
               style: Theme.of(context).textTheme.outlineLarge,
             ),
             SectionContainer(
-              color: GameColor.black.withAlpha(128),
+              color: GameColor.black.halfTransparent,
               child: levelSelect(),
             ),
           ],

@@ -28,7 +28,7 @@ class SquareButton extends StatelessWidget {
     final style =
         textStyle ?? Theme.of(context).textTheme.bodyLarge!.copyWith(color: GameColor.white);
 
-    final backGround = filled ? GameColor.black.withAlpha(128) : GameColor.white;
+    final backGround = filled ? GameColor.black.halfTransparent : GameColor.white;
 
     return Padding(
       padding: padding,

@@ -1,11 +1,3 @@
-import 'package:flutter_flame_typing/level/position_practice_level.dart';
-import 'package:flutter_flame_typing/model/level.dart';
-
-final levels = <int, List<Level Function()>>{
-  PositionPracticeMode().id: PositionPracticeLevel.levels(),
-  WordTypePracticeMode().id: [],
-};
-
 interface class GameMode {
   GameMode(this.title, this.id);
   final String title;
@@ -15,10 +7,8 @@ interface class GameMode {
     switch (id) {
       case 0:
         return PositionPracticeMode();
-      case 1:
-        return WordTypePracticeMode();
       default:
-        return TestTypeMode();
+        return WordPracticeMode();
     }
   }
 }
@@ -30,16 +20,9 @@ class PositionPracticeMode implements GameMode {
   String get title => 'ポジション練習';
 }
 
-class WordTypePracticeMode implements GameMode {
+class WordPracticeMode implements GameMode {
   @override
   int get id => 1;
   @override
-  String get title => 'ワードタイプ練習';
-}
-
-class TestTypeMode implements GameMode {
-  @override
-  int get id => 2;
-  @override
-  String get title => 'テストタイプ';
+  String get title => 'ワード練習';
 }

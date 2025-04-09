@@ -2,6 +2,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_flame_typing/game/game_score_component.dart';
 import 'package:get_it/get_it.dart';
 
 import '../game_component/bullet.dart';
@@ -132,6 +133,12 @@ class TypingGame extends FlameGame
     score = score.incorrectType();
   }
 
+  void _clear() {
+    phase = GamePhase.clear;
+    word = 'CLEAR!';
+    world.add(GameScoreComponent(score: score));
+  }
+
   void proccessElement() async {
     phase = GamePhase.playing;
     final e = currentEvent;
@@ -181,8 +188,7 @@ class TypingGame extends FlameGame
       if (!score.clear) {
         proccessElement();
       } else {
-        phase = GamePhase.clear;
-        word = 'CLEAR!';
+        _clear();
       }
     }
   }
@@ -194,5 +200,6 @@ class TypingGame extends FlameGame
       await Future.delayed(const Duration(milliseconds: 150));
       world.add(DyingFx());
     }
+    world.add(GameScoreComponent(score: score));
   }
 }
