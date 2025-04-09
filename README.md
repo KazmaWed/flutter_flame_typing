@@ -1,6 +1,6 @@
 # Flutter Flame Typing
 
-🚧 This project is still under develop (You can try it out [here](https://flutter-flame-typing.web.app/))
+🚧 This project is still under develop
 
 ## About this project
 
