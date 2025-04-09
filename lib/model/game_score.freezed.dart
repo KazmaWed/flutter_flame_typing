@@ -15,6 +15,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$GameScore {
+  double get time;
   Level get level;
   Map<Obstacle, ObstacleScore> get obstacleScore;
 
@@ -30,14 +31,15 @@ mixin _$GameScore {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is GameScore &&
+            (identical(other.time, time) || other.time == time) &&
             (identical(other.level, level) || other.level == level) &&
             const DeepCollectionEquality()
                 .equals(other.obstacleScore, obstacleScore));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, level, const DeepCollectionEquality().hash(obstacleScore));
+  int get hashCode => Object.hash(runtimeType, time, level,
+      const DeepCollectionEquality().hash(obstacleScore));
 }
 
 /// @nodoc
@@ -45,7 +47,8 @@ abstract mixin class $GameScoreCopyWith<$Res> {
   factory $GameScoreCopyWith(GameScore value, $Res Function(GameScore) _then) =
       _$GameScoreCopyWithImpl;
   @useResult
-  $Res call({Level level, Map<Obstacle, ObstacleScore> obstacleScore});
+  $Res call(
+      {double time, Level level, Map<Obstacle, ObstacleScore> obstacleScore});
 }
 
 /// @nodoc
@@ -60,10 +63,15 @@ class _$GameScoreCopyWithImpl<$Res> implements $GameScoreCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? time = null,
     Object? level = null,
     Object? obstacleScore = null,
   }) {
     return _then(_self.copyWith(
+      time: null == time
+          ? _self.time
+          : time // ignore: cast_nullable_to_non_nullable
+              as double,
       level: null == level
           ? _self.level
           : level // ignore: cast_nullable_to_non_nullable
@@ -80,11 +88,14 @@ class _$GameScoreCopyWithImpl<$Res> implements $GameScoreCopyWith<$Res> {
 
 class _GameScore extends GameScore {
   const _GameScore(
-      {required this.level,
+      {required this.time,
+      required this.level,
       required final Map<Obstacle, ObstacleScore> obstacleScore})
       : _obstacleScore = obstacleScore,
         super._();
 
+  @override
+  final double time;
   @override
   final Level level;
   final Map<Obstacle, ObstacleScore> _obstacleScore;
@@ -108,14 +119,15 @@ class _GameScore extends GameScore {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _GameScore &&
+            (identical(other.time, time) || other.time == time) &&
             (identical(other.level, level) || other.level == level) &&
             const DeepCollectionEquality()
                 .equals(other._obstacleScore, _obstacleScore));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, level, const DeepCollectionEquality().hash(_obstacleScore));
+  int get hashCode => Object.hash(runtimeType, time, level,
+      const DeepCollectionEquality().hash(_obstacleScore));
 }
 
 /// @nodoc
@@ -126,7 +138,8 @@ abstract mixin class _$GameScoreCopyWith<$Res>
       __$GameScoreCopyWithImpl;
   @override
   @useResult
-  $Res call({Level level, Map<Obstacle, ObstacleScore> obstacleScore});
+  $Res call(
+      {double time, Level level, Map<Obstacle, ObstacleScore> obstacleScore});
 }
 
 /// @nodoc
@@ -141,10 +154,15 @@ class __$GameScoreCopyWithImpl<$Res> implements _$GameScoreCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
+    Object? time = null,
     Object? level = null,
     Object? obstacleScore = null,
   }) {
     return _then(_GameScore(
+      time: null == time
+          ? _self.time
+          : time // ignore: cast_nullable_to_non_nullable
+              as double,
       level: null == level
           ? _self.level
           : level // ignore: cast_nullable_to_non_nullable

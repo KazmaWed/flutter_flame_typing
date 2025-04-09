@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -6,6 +7,7 @@ import '../../component/square_button.dart';
 import '../../component/square_segmented_button.dart';
 import '../../level/level_map.dart';
 import '../../level/position_practice_level.dart';
+import '../../level/sample_level.dart';
 import '../../level/word_typing_level.dart';
 import '../../main.dart';
 import '../../model/game_audio.dart';
@@ -127,6 +129,7 @@ class _LevelPickViewState extends State<LevelPickView> {
 
   late final Map<String, List<List<Level Function()>>> levelsMap = {
     WordPracticeMode().title: [
+      if (kDebugMode) SampleLavel.generators,
       WordPracticeLevel.generators(Language.japanese),
       WordPracticeLevel.generators(Language.english),
       WordPracticeLevel.generators(Language.program),

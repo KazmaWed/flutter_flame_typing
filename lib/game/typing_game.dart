@@ -109,7 +109,7 @@ class TypingGame extends FlameGame
     super.update(dt);
     if (phase != GamePhase.playing) return;
     if (currentEvent is Obstacle) {
-      distance += dt;
+      score = score.copyWith(time: score.time + dt);
     }
   }
 

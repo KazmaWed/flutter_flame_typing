@@ -1,11 +1,17 @@
 import '../model/level.dart';
 
 class SampleLavel {
+  static List<Level Function()> get generators => [
+        () => level00,
+        () => level01,
+        () => level02,
+      ];
   static Level get level00 => Level(
-        title: 'Level 00',
+        title: 'TestLevel',
         events: [
-          Obstacle('f'),
-          Obstacle('h'),
+          Obstacle('asdf'),
+          Obstacle('jkl;'),
+          Obstacle('jjjjjjjj'),
         ],
       );
 

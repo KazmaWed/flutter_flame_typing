@@ -10,6 +10,7 @@ part 'game_score.freezed.dart';
 abstract class GameScore with _$GameScore {
   const GameScore._();
   const factory GameScore({
+    required double time,
     required Level level,
     required Map<Obstacle, ObstacleScore> obstacleScore,
   }) = _GameScore;
@@ -17,6 +18,7 @@ abstract class GameScore with _$GameScore {
   // 生成メソッド
   static GameScore createGameScore(Level level) {
     return GameScore(
+      time: 0,
       level: level,
       obstacleScore: {
         for (final obstacle in level.events.whereType<Obstacle>())
@@ -27,7 +29,7 @@ abstract class GameScore with _$GameScore {
 
   @override
   String toString() {
-    return 'GameScore(event: $currentEventIndex, correct: $totalCorrectType, incorrect: $totalIncorrectType, combo: $combo, perfect: $perfect)';
+    return 'GameScore(event: $currentEventIndex, correct: $totalCorrectType, incorrect: $totalIncorrectType, combo: $combo, perfect: $perfect, time: $time)';
   }
 }
 
@@ -72,6 +74,8 @@ extension GameScoreExtension on GameScore {
 
   int get totalCorrectType => obstacleScore.values.fold(0, (sum, e) => sum + e.correct); // 正解数
   int get totalIncorrectType => obstacleScore.values.fold(0, (sum, e) => sum + e.incorrect); // 正解数
+  double get accuracy => 100 * totalCorrectType / (totalCorrectType + totalIncorrectType); // 正解率
+  double get lpm => totalCorrectType / time * 60; // 単位時間あたりの正解数
 
   // 全ての単語が終了したか
   bool get clear => level.events.every((e) => e.end); // 全ての単語をタイプしたか
