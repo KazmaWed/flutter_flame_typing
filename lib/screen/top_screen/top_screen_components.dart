@@ -130,9 +130,9 @@ class _LevelPickViewState extends State<LevelPickView> {
   late final Map<String, List<List<Level Function()>>> levelsMap = {
     WordPracticeMode().title: [
       if (kDebugMode) SampleLavel.generators,
-      WordPracticeLevel.generators(Language.japanese),
-      WordPracticeLevel.generators(Language.english),
-      WordPracticeLevel.generators(Language.program),
+      // WordPracticeLevel.generators(Language.japanese),
+      WordPracticeLevel.english(),
+      WordPracticeLevel.program(),
     ],
     PositionPracticeMode().title: [
       PositionPracticeLevel.rows(),
