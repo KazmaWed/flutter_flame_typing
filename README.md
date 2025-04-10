@@ -1,4 +1,4 @@
-# Flutter Flame Typing
+# NINJA TYPER
 
 🎮 A simple typing game developed with [Flutter](https://flutter.dev/) and [Flame](https://flame-engine.org/).
 
