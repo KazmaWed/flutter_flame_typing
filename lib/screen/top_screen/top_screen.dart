@@ -60,7 +60,10 @@ class _TopScreenState extends State<TopScreen> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => KeyboardSettingScreen(
-              onSettingChanged: () => setState(() {}),
+              onSettingChanged: () {
+                setState(() {});
+                audio.play(GameAudio.click, setting.se);
+              },
             ),
           ),
         );
@@ -79,6 +82,7 @@ class _TopScreenState extends State<TopScreen> {
           setState(() => settingManager.setSe(se));
           await audio.dryRun();
           audio.play(GameAudio.shoot, setting.se);
+          audio.play(GameAudio.click, setting.se);
           _animateToPage(1);
         },
       ),
