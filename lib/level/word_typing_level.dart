@@ -61,7 +61,7 @@ class WordPracticeLevel {
   static List<Level Function()> program() {
     return [
       () => Level(
-            title: '${Language.program.name}-短-',
+            title: '${Language.program.name}-短',
             events: [
               Message.wave(1),
               for (var i = 0; i < 15; i++) Obstacle(Language.program.ofLength(0, 3).pickRandom()),
