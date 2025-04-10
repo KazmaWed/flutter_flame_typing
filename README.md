@@ -1,10 +1,12 @@
 # Flutter Flame Typing
 
-🚧 This project is still under develop
+🎮 A simple typing game developed with [Flutter](https://flutter.dev/) and [Flame](https://flame-engine.org/).
+
+https://github.com/user-attachments/assets/a16b1e7f-052c-4fb9-846d-95a551ef305f
 
 ## About this project
 
-🎮 A simple typing game developed with [Flutter](https://flutter.dev/) and [Flame](https://flame-engine.org/).
+🚧 This project is still under development (you can try out [here](https://flutter-flame-typing.web.app/))
 
 ## Thanks
 
