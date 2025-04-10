@@ -2,12 +2,13 @@ import 'package:flame_audio/flame_audio.dart';
 
 // オーディオアセットクラス
 enum GameAudio {
-  shoot('shoot.mp3'),
-  wrong('wrong.mp3'),
-  reload('reload.mp3'),
+  bgm('Neon_Drive.mp3', volume: 0.1),
+  click('click.mp3', volume: 0.5),
+  dying('dying.mp3', volume: 0.25),
   hit('hit.mp3'),
-  dying('dying.mp3', volume: 0.2),
-  bgm('Neon_Drive.mp3', volume: 0.15);
+  reload('reload.mp3'),
+  shoot('shoot.mp3'),
+  wrong('wrong.mp3');
 
   // ファイル名
   final String path;
@@ -18,7 +19,7 @@ enum GameAudio {
   static List<GameAudio> get bgms => [bgm];
 
   // サウンドエフェクトリスト
-  static List<GameAudio> get soundEffects => [shoot, wrong, reload, hit, dying];
+  static List<GameAudio> get soundEffects => [click, shoot, wrong, reload, hit, dying];
 }
 
 class GameAudioPlayer {

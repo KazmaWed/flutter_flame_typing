@@ -5,6 +5,20 @@ extension ListExtension on List {
     final id = Random().nextInt(length);
     return this[id];
   }
+
+  T? lastWhereOrNull<T>(bool Function(T) test) {
+    for (var i = length - 1; i >= 0; i--) {
+      if (test(this[i])) return this[i];
+    }
+    return null;
+  }
+
+  T? firstWhereOrNull<T>(bool Function(T) test) {
+    for (var i = 0; i < length; i++) {
+      if (test(this[i])) return this[i];
+    }
+    return null;
+  }
 }
 
 extension StringIterableExtension on Iterable<String> {

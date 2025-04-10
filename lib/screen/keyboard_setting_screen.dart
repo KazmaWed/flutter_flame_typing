@@ -59,6 +59,7 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                   ),
                 );
               },
+              onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
               text: '入力テスト',
             ),
             RectangleButton(
@@ -67,6 +68,7 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                 audio.play(GameAudio.shoot, setting.se);
                 Navigator.of(context).pop();
               },
+              onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
               text: '決定',
             ),
           ],
@@ -105,6 +107,8 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                             });
                             widget.onSettingChanged();
                           },
+                          onHover: (enter) =>
+                              enter ? audio.play(GameAudio.click, setting.se) : null,
                           selected: phisicalLayout,
                         ),
                       ],
@@ -136,6 +140,8 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                               setState(() => settingManager.setLogicalLayout(null));
                               widget.onSettingChanged();
                             },
+                            onHover: (enter) =>
+                                enter ? audio.play(GameAudio.click, setting.se) : null,
                             text: 'OFF',
                             filled: !virtualMode,
                           ),
@@ -154,6 +160,8 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                                 });
                                 widget.onSettingChanged();
                               },
+                              onHover: (enter) =>
+                                  enter ? audio.play(GameAudio.click, setting.se) : null,
                               text: layout.name,
                               filled: virtualMode && layout == logicalLayout,
                               foregroundColor: setting.phisicalLayout == layout
@@ -188,7 +196,7 @@ class _KeyboardSettingScreenState extends State<KeyboardSettingScreen> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
-                                      ?.copyWith(color: GameColor.white.withAlpha(128))),
+                                      ?.copyWith(color: GameColor.white.halfTransparent)),
                             ),
                           ],
                         ),

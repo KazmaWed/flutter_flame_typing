@@ -6,6 +6,7 @@ class SquareButton extends StatelessWidget {
   const SquareButton({
     super.key,
     required this.onTap,
+    required this.onHover,
     this.widget,
     this.text,
     this.border = false,
@@ -15,6 +16,7 @@ class SquareButton extends StatelessWidget {
     this.padding = const EdgeInsets.all(8.0),
   });
   final Function onTap;
+  final Function(bool) onHover;
   final Widget? widget;
   final String? text;
   final bool border;
@@ -28,12 +30,13 @@ class SquareButton extends StatelessWidget {
     final style =
         textStyle ?? Theme.of(context).textTheme.bodyLarge!.copyWith(color: GameColor.white);
 
-    final backGround = filled ? GameColor.black.withAlpha(128) : GameColor.white;
+    final backGround = filled ? GameColor.black.halfTransparent : GameColor.white;
 
     return Padding(
       padding: padding,
       child: Center(
         child: TextButton(
+          onHover: (value) => onHover(value),
           onPressed: () => onTap(),
           style: TextButton.styleFrom(
             minimumSize: Size(size, size), // 幅200, 高さ60の長方形
@@ -64,6 +67,7 @@ class RectangleButton extends StatelessWidget {
   const RectangleButton({
     super.key,
     required this.onTap,
+    required this.onHover,
     this.widget,
     this.text,
     this.border = false,
@@ -74,6 +78,7 @@ class RectangleButton extends StatelessWidget {
     this.padding = const EdgeInsets.all(8),
   });
   final Function onTap;
+  final Function(bool) onHover;
   final Widget? widget;
   final String? text;
   final bool border;
@@ -94,6 +99,7 @@ class RectangleButton extends StatelessWidget {
 
     return TextButton(
       onPressed: () => onTap(),
+      onHover: (value) => onHover(value),
       style: TextButton.styleFrom(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero, // 角を丸めず完全な長方形にする

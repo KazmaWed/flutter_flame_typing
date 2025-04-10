@@ -1,11 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../component/section_container.dart';
 import '../../component/square_button.dart';
 import '../../component/square_segmented_button.dart';
 import '../../level/level_map.dart';
 import '../../level/position_practice_level.dart';
+import '../../level/sample_level.dart';
 import '../../level/word_typing_level.dart';
 import '../../main.dart';
 import '../../model/game_audio.dart';
@@ -13,7 +16,6 @@ import '../../model/game_color.dart';
 import '../../model/game_setting.dart';
 import '../../model/game_setting_manager.dart';
 import '../../model/level.dart';
-import '../../model/word.dart';
 import '../../theme.dart';
 import '../typing_game_screen.dart';
 
@@ -26,8 +28,11 @@ class GameBottomAppBar extends StatelessWidget {
   final Function onTapKeyboardSetting;
   final Function onTapSe;
 
+  final githubUrl = 'https://github.com/KazmaWed/flutter_flame_typing';
+
   @override
   Widget build(BuildContext context) {
+    final audio = GetIt.instance.get<GameAudioPlayer>();
     final settingManager = GetIt.I.get<GameSettingManager>();
     GameSetting setting = settingManager.gameSetting;
 
@@ -38,6 +43,7 @@ class GameBottomAppBar extends StatelessWidget {
         children: [
           RectangleButton(
             onTap: () => onTapKeyboardSetting(),
+            onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
             widget: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(
@@ -52,6 +58,7 @@ class GameBottomAppBar extends StatelessWidget {
           if (setting.se != null)
             RectangleButton(
               onTap: () => onTapSe(),
+              onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
               widget: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
@@ -65,8 +72,21 @@ class GameBottomAppBar extends StatelessWidget {
             ),
           const Spacer(),
           RectangleButton(
-            onTap: () {},
-            widget: const Text('Github'),
+            onTap: () => launchUrl(
+              Uri.parse(githubUrl),
+              webOnlyWindowName: '_blank',
+            ),
+            onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
+            widget: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                spacing: 8.0,
+                children: [
+                  Icon(Icons.code_sharp),
+                  Text('Github'),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -83,6 +103,10 @@ class SoundModePickView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final audio = GetIt.instance.get<GameAudioPlayer>();
+    final settingManager = GetIt.instance.get<GameSettingManager>();
+    final setting = settingManager.gameSetting;
+
     const items = {
       'サウンドON': true,
       'サウンドOFF': false,
@@ -101,6 +125,7 @@ class SoundModePickView extends StatelessWidget {
                 .map(
                   (e) => SquareButton(
                     onTap: () => onTap(e.value),
+                    onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
                     widget: Text(e.key),
                     filled: true,
                   ),
@@ -126,12 +151,13 @@ class _LevelPickViewState extends State<LevelPickView> {
   GameSetting get setting => settingManager.gameSetting;
 
   late final Map<String, List<List<Level Function()>>> levelsMap = {
-    'ワード練習': [
-      WordPracticeLevel.generators(Language.japanese),
-      WordPracticeLevel.generators(Language.english),
-      WordPracticeLevel.generators(Language.program),
+    WordPracticeMode().title: [
+      if (kDebugMode) SampleLavel.generators,
+      // WordPracticeLevel.generators(Language.japanese),
+      WordPracticeLevel.english(),
+      WordPracticeLevel.program(),
     ],
-    'ポジション練習': [
+    PositionPracticeMode().title: [
       PositionPracticeLevel.rows(),
       PositionPracticeLevel.sides(),
     ]
@@ -171,6 +197,8 @@ class _LevelPickViewState extends State<LevelPickView> {
                                     ),
                                   );
                                 },
+                                onHover: (enter) =>
+                                    enter ? audio.play(GameAudio.click, setting.se) : null,
                                 text: level().title,
                               ),
                           ],
@@ -197,21 +225,23 @@ class _LevelPickViewState extends State<LevelPickView> {
               style: Theme.of(context).textTheme.outlineLarge,
             ),
             SquareSegmentedButton(
-                labels: levelsMap.keys.toList(),
-                currentIndex: setting.gameMode,
-                onSelect: (i) {
-                  audio.play(GameAudio.shoot, setting.se);
-                  setState(() {
-                    settingManager.setGameMode(GameMode.fromId(i));
-                  });
-                }),
+              labels: levelsMap.keys.toList(),
+              currentIndex: setting.gameMode,
+              onSelect: (i) {
+                audio.play(GameAudio.shoot, setting.se);
+                setState(() {
+                  settingManager.setGameMode(GameMode.fromId(i));
+                });
+              },
+              onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
+            ),
             const SizedBox(height: 12),
             Text(
               'レベル選択',
               style: Theme.of(context).textTheme.outlineLarge,
             ),
             SectionContainer(
-              color: GameColor.black.withAlpha(128),
+              color: GameColor.black.halfTransparent,
               child: levelSelect(),
             ),
           ],

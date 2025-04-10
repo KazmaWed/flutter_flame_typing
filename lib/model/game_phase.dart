@@ -1,3 +1,4 @@
+// タイピングゲーム中のフェイズ
 enum GamePhase {
   starting,
   playing,
