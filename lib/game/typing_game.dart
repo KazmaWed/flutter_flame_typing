@@ -2,7 +2,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_flame_typing/game/game_score_component.dart';
+import 'package:ninja_typer/game/game_score_component.dart';
 import 'package:get_it/get_it.dart';
 
 import '../game_component/bullet.dart';

@@ -1,5 +1,5 @@
-import 'package:flutter_flame_typing/extension/list_extension.dart';
-import 'package:flutter_flame_typing/model/word.dart';
+import 'package:ninja_typer/extension/list_extension.dart';
+import 'package:ninja_typer/model/word.dart';
 
 import '../model/level.dart';
 

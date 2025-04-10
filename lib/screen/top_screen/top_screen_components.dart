@@ -28,7 +28,7 @@ class GameBottomAppBar extends StatelessWidget {
   final Function onTapKeyboardSetting;
   final Function onTapSe;
 
-  final githubUrl = 'https://github.com/KazmaWed/flutter_flame_typing';
+  final githubUrl = 'https://github.com/KazmaWed/ninja_typer';
 
   @override
   Widget build(BuildContext context) {

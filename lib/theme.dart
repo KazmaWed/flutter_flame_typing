@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_flame_typing/model/game_color.dart';
+import 'package:ninja_typer/model/game_color.dart';
 
 const textTheme = TextTheme(
   bodyMedium: TextStyle(fontSize: 18),

@@ -24,7 +24,7 @@ void main() async {
 
   runApp(
     MaterialApp(
-      title: 'TypingGame',
+      title: 'Ninja Typer',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,

@@ -1,4 +1,4 @@
-import 'package:flutter_flame_typing/model/game_setting.dart';
+import 'package:ninja_typer/model/game_setting.dart';
 
 import '../level/level_map.dart';
 import 'kayboard_layout.dart';

@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter_flame_typing",
+            "name": "ninja_typer",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "flutter_flame_typing (profile mode)",
+            "name": "ninja_typer (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "flutter_flame_typing (release mode)",
+            "name": "ninja_typer (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
