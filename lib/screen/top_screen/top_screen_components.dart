@@ -32,6 +32,7 @@ class GameBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final audio = GetIt.instance.get<GameAudioPlayer>();
     final settingManager = GetIt.I.get<GameSettingManager>();
     GameSetting setting = settingManager.gameSetting;
 
@@ -42,6 +43,7 @@ class GameBottomAppBar extends StatelessWidget {
         children: [
           RectangleButton(
             onTap: () => onTapKeyboardSetting(),
+            onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
             widget: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(
@@ -56,6 +58,7 @@ class GameBottomAppBar extends StatelessWidget {
           if (setting.se != null)
             RectangleButton(
               onTap: () => onTapSe(),
+              onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
               widget: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
@@ -73,6 +76,7 @@ class GameBottomAppBar extends StatelessWidget {
               Uri.parse(githubUrl),
               webOnlyWindowName: '_blank',
             ),
+            onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
             widget: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(
@@ -99,6 +103,10 @@ class SoundModePickView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final audio = GetIt.instance.get<GameAudioPlayer>();
+    final settingManager = GetIt.instance.get<GameSettingManager>();
+    final setting = settingManager.gameSetting;
+
     const items = {
       'サウンドON': true,
       'サウンドOFF': false,
@@ -117,6 +125,7 @@ class SoundModePickView extends StatelessWidget {
                 .map(
                   (e) => SquareButton(
                     onTap: () => onTap(e.value),
+                    onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
                     widget: Text(e.key),
                     filled: true,
                   ),
@@ -188,6 +197,8 @@ class _LevelPickViewState extends State<LevelPickView> {
                                     ),
                                   );
                                 },
+                                onHover: (enter) =>
+                                    enter ? audio.play(GameAudio.click, setting.se) : null,
                                 text: level().title,
                               ),
                           ],
@@ -214,14 +225,16 @@ class _LevelPickViewState extends State<LevelPickView> {
               style: Theme.of(context).textTheme.outlineLarge,
             ),
             SquareSegmentedButton(
-                labels: levelsMap.keys.toList(),
-                currentIndex: setting.gameMode,
-                onSelect: (i) {
-                  audio.play(GameAudio.shoot, setting.se);
-                  setState(() {
-                    settingManager.setGameMode(GameMode.fromId(i));
-                  });
-                }),
+              labels: levelsMap.keys.toList(),
+              currentIndex: setting.gameMode,
+              onSelect: (i) {
+                audio.play(GameAudio.shoot, setting.se);
+                setState(() {
+                  settingManager.setGameMode(GameMode.fromId(i));
+                });
+              },
+              onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
+            ),
             const SizedBox(height: 12),
             Text(
               'レベル選択',

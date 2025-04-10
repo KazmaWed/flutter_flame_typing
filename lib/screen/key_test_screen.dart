@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_flame_typing/component/square_button.dart';
+import 'package:get_it/get_it.dart';
 
+import '../component/square_button.dart';
 import '../component/keyboard_layout_preview.dart';
+import '../model/game_audio.dart';
+import '../model/game_setting_manager.dart' show GameSettingManager;
 import '../model/kayboard_layout.dart';
 
 class KeyTestScreen extends StatefulWidget {
@@ -27,7 +30,12 @@ class _KeyTestScreenState extends State<KeyTestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final audio = GetIt.I.get<GameAudioPlayer>();
+    final settingManager = GetIt.I.get<GameSettingManager>();
+    final setting = settingManager.gameSetting;
+
     _focusNode.requestFocus();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -39,6 +47,7 @@ class _KeyTestScreenState extends State<KeyTestScreen> {
           children: [
             RectangleButton(
               onTap: () => Navigator.of(context).pop(),
+              onHover: (enter) => enter ? audio.play(GameAudio.click, setting.se) : null,
               widget: const Text('戻る'),
             )
           ],
