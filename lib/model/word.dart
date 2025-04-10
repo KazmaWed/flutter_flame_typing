@@ -33,8 +33,8 @@ class Language {
   List<String> longest() => words.where((e) => 11 <= e.length).toLowerCaseList();
 
   // static const japanese = Language(name: '日本語', words: commonEnglish);
-  static const english = Language(name: '英語', words: commonEnglish);
-  static const program = Language(name: 'プログラミング言語', words: programingKeywords);
+  static const english = Language(name: '英単語', words: commonEnglish);
+  static const program = Language(name: 'プログラミング', words: programingKeywords);
 }
 
 // final List<String> _symbols = [

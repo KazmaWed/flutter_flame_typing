@@ -52,16 +52,16 @@ class WordPracticeLevel {
 
   static List<Level Function()> english() {
     return [
-      () => _autoGenShort('${Language.english.name}(短)', Language.english),
-      () => _autoGenMedium('${Language.english.name}(中)', Language.english),
-      () => _autoGenLong('${Language.english.name}(長)', Language.english),
+      () => _autoGenShort('${Language.english.name}-短', Language.english),
+      () => _autoGenMedium('${Language.english.name}-中', Language.english),
+      () => _autoGenLong('${Language.english.name}-長', Language.english),
     ];
   }
 
   static List<Level Function()> program() {
     return [
       () => Level(
-            title: "${Language.program.name}(短)",
+            title: '${Language.program.name}-短-',
             events: [
               Message.wave(1),
               for (var i = 0; i < 15; i++) Obstacle(Language.program.ofLength(0, 3).pickRandom()),
@@ -70,7 +70,7 @@ class WordPracticeLevel {
             ],
           ),
       () => Level(
-            title: "${Language.program.name}(長)",
+            title: '${Language.program.name}-長',
             events: [
               Message.wave(1),
               for (var i = 0; i < 15; i++) Obstacle(Language.program.ofLength(5, 6).pickRandom()),

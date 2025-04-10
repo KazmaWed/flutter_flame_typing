@@ -48,7 +48,7 @@ class _TopScreenState extends State<TopScreen> {
           spacing: 12,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('タイプ・シューター'),
+            Text('ニンジャタイパー'),
           ],
         ),
       ),

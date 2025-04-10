@@ -5,7 +5,7 @@ enum GameScoreClass {
   c('快速タイパー', 4),
   b('音速タイパー', 5),
   a('光速タイパー', 6),
-  s('タイプ忍者', 7);
+  s('ニンジャタイパー', 7);
 
   const GameScoreClass(this.title, this.level);
   final String title;

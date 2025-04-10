@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../component/section_container.dart';
 import '../../component/square_button.dart';
@@ -15,7 +16,6 @@ import '../../model/game_color.dart';
 import '../../model/game_setting.dart';
 import '../../model/game_setting_manager.dart';
 import '../../model/level.dart';
-import '../../model/word.dart';
 import '../../theme.dart';
 import '../typing_game_screen.dart';
 
@@ -27,6 +27,8 @@ class GameBottomAppBar extends StatelessWidget {
   });
   final Function onTapKeyboardSetting;
   final Function onTapSe;
+
+  final githubUrl = 'https://github.com/KazmaWed/flutter_flame_typing';
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +69,20 @@ class GameBottomAppBar extends StatelessWidget {
             ),
           const Spacer(),
           RectangleButton(
-            onTap: () {},
-            widget: const Text('Github'),
+            onTap: () => launchUrl(
+              Uri.parse(githubUrl),
+              webOnlyWindowName: '_blank',
+            ),
+            widget: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                spacing: 8.0,
+                children: [
+                  Icon(Icons.code_sharp),
+                  Text('Github'),
+                ],
+              ),
+            ),
           ),
         ],
       ),
