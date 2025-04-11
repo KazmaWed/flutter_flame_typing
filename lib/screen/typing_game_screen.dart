@@ -1,9 +1,12 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import '../component/keyboard_layout_preview.dart';
+import '../firebase_helper.dart';
 import '../game/typing_game.dart';
 import '../main.dart';
+import '../model/app_info.dart';
 import '../model/kayboard_layout.dart';
 import '../model/game_color.dart';
 import '../model/level.dart';
@@ -26,6 +29,8 @@ class TypingGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appInfoManager = GetIt.I.get<AppInfoManager>();
+
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: false),
       bottomNavigationBar: const BottomAppBar(),
@@ -48,6 +53,10 @@ class TypingGameScreen extends StatelessWidget {
                   level: level,
                   bgm: bgm,
                   onTapQuit: () => Navigator.of(context).pop(),
+                  onGameOver: (score) => FirebaseHelper().sendGameScore(
+                    appInfoManager.appInfo,
+                    score,
+                  ),
                 ),
               ),
             ),
