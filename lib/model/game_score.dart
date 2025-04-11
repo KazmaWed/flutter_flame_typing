@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../extension/list_extension.dart';
+import 'app_info.dart';
 import 'level.dart';
 
 part 'game_score.freezed.dart';
@@ -127,9 +128,10 @@ extension GameScoreExtension on GameScore {
 
   // ---------- 変換メソッド類 ----------
 
-  Map<String, dynamic> toJson({String appVersion = 'undefined'}) {
+  Map<String, dynamic> toJson({AppInfo? appInfo}) {
     return {
-      'appVersion': appVersion,
+      'uuid': (appInfo ?? AppInfo()).uuid,
+      'appVersion': (appInfo ?? AppInfo()).appVersion,
       'dateTime': DateTime.now().toIso8601String(),
       'level': level.title,
       'time': time,
