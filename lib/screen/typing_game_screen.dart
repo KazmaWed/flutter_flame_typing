@@ -53,9 +53,9 @@ class TypingGameScreen extends StatelessWidget {
                   level: level,
                   bgm: bgm,
                   onTapQuit: () => Navigator.of(context).pop(),
-                  onGameOver: (score) => FirebaseHelper().sendGameScore(
-                    appInfoManager.appInfo,
-                    score,
+                  onGameOver: (gameScore) => FirebaseHelper().sendGameScore(
+                    appInfo: appInfoManager.appInfo,
+                    gameScore: gameScore,
                   ),
                 ),
               ),
