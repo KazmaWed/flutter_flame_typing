@@ -56,6 +56,16 @@ class ObstacleScore {
       incorrect: incorrect ?? this.incorrect,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'word': word,
+      'correct': correct,
+      'incorrect': incorrect,
+      'clear': clear,
+      'perfect': perfect,
+    };
+  }
 }
 
 // GameScoreの拡張メソッド群
@@ -113,6 +123,21 @@ extension GameScoreExtension on GameScore {
     }
 
     return max;
+  }
+
+  // ---------- 変換メソッド類 ----------
+
+  Map<String, dynamic> toJson({String appVersion = 'undefined'}) {
+    return {
+      'appVersion': appVersion,
+      'dateTime': DateTime.now().toIso8601String(),
+      'level': level.title,
+      'time': time,
+      'accuracy': accuracy,
+      'lpm': lpm,
+      'maxCombo': maxCombo,
+      'obstacleScore': obstacleScore.values.where((e) => e.clear).map((e) => e.toJson()).toList(),
+    };
   }
 
   // ---------- 複製メソッド類 ----------
