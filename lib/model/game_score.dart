@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../extension/list_extension.dart';
+import 'app_info.dart';
 import 'level.dart';
 
 part 'game_score.freezed.dart';
@@ -55,6 +57,16 @@ class ObstacleScore {
       correct: correct ?? this.correct,
       incorrect: incorrect ?? this.incorrect,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'word': word,
+      'correct': correct,
+      'incorrect': incorrect,
+      'clear': clear,
+      'perfect': perfect,
+    };
   }
 }
 
@@ -113,6 +125,25 @@ extension GameScoreExtension on GameScore {
     }
 
     return max;
+  }
+
+  // ---------- 変換メソッド類 ----------
+
+  // Firebase Cloud Store格納用Json
+  Map<String, dynamic> toJson({AppInfo? appInfo}) {
+    return {
+      'debug': kDebugMode,
+      'uuid': (appInfo ?? AppInfo()).uuid,
+      'appVersion': (appInfo ?? AppInfo()).appVersion,
+      'dateTime': DateTime.now().toIso8601String(),
+      'level': level.title,
+      'clear': clear,
+      'time': time,
+      'accuracy': accuracy,
+      'lpm': lpm,
+      'maxCombo': maxCombo,
+      'obstacleScore': obstacleScore.values.where((e) => e.clear).map((e) => e.toJson()).toList(),
+    };
   }
 
   // ---------- 複製メソッド類 ----------
