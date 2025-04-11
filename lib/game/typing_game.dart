@@ -28,12 +28,14 @@ class TypingGame extends FlameGame
     required this.level,
     required this.bgm,
     required this.onTapQuit,
+    required this.onGameOver,
   }) : size = gameSize;
 
   final Vector2 gameSize;
   final Level level;
   final bool bgm;
   final Function onTapQuit;
+  final Function(GameScore) onGameOver;
 
   @override
   Vector2 size;
@@ -137,6 +139,7 @@ class TypingGame extends FlameGame
     phase = GamePhase.clear;
     word = 'CLEAR!';
     world.add(GameScoreComponent(score: score));
+    onGameOver(score);
   }
 
   void proccessElement() async {
@@ -201,5 +204,6 @@ class TypingGame extends FlameGame
       world.add(DyingFx());
     }
     world.add(GameScoreComponent(score: score));
+    onGameOver(score);
   }
 }

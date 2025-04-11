@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../extension/list_extension.dart';
@@ -128,12 +129,15 @@ extension GameScoreExtension on GameScore {
 
   // ---------- 変換メソッド類 ----------
 
+  // Firebase Cloud Store格納用Json
   Map<String, dynamic> toJson({AppInfo? appInfo}) {
     return {
+      'debug': kDebugMode,
       'uuid': (appInfo ?? AppInfo()).uuid,
       'appVersion': (appInfo ?? AppInfo()).appVersion,
       'dateTime': DateTime.now().toIso8601String(),
       'level': level.title,
+      'clear': clear,
       'time': time,
       'accuracy': accuracy,
       'lpm': lpm,

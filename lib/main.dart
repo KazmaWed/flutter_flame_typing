@@ -22,7 +22,7 @@ void main() async {
   // GetItの初期化
   GetIt.instance.registerSingleton(GameSettingManager());
   GetIt.instance.registerSingleton(GameAudioPlayer(false));
-  GetIt.instance.registerSingleton(AppInfoManager);
+  GetIt.instance.registerSingleton(AppInfoManager());
 
   WidgetsFlutterBinding.ensureInitialized();
 
